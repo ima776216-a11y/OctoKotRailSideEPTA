@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Railside | Admin Panel</title>
+    <style>
+        /* Базовые стили */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        body {
+            background-color: #0a0a0f;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 0, 85, 0.1), transparent 30%),
+                radial-gradient(circle at 90% 80%, rgba(0, 150, 255, 0.1), transparent 30%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        /* Основная карточка */
+        .dashboard {
+            background: rgba(18, 18, 24, 0.8);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 900px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(255, 0, 85, 0.1);
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            overflow: hidden;
+            animation: fadeUp 0.6s ease-out;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Левая панель (Инфо) */
+        .info-panel {
+            padding: 40px;
+            background: linear-gradient(180deg, rgba(255, 0, 85, 0.05), transparent);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .logo {
+            font-size: 14px;
+            font-weight: 900;
+            color: #ff0055;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .logo::before {
+            content: '';
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #ff0055;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #ff0055;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        h1 {
+            font-size: 42px;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        .cookies-text {
+            font-family: 'Courier New', monospace;
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 30px;
+            background: rgba(0,0,0,0.3);
+            padding: 10px;
+            border-radius: 8px;
+            border-left: 3px solid #00d2ff;
+        }
+
+        /* Кнопка скачивания */
+        .download-btn {
+            background: linear-gradient(90deg, #ff0055, #ff5500);
+            color: #fff;
+            text-decoration: none;
+            padding: 15px 25px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 16px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(255, 0, 85, 0.3);
+            border: none;
+            cursor: pointer;
+            width: fit-content;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255, 0, 85, 0.5);
+        }
+
+        .version {
+            margin-top: 15px;
+            font-size: 12px;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Правая панель (Команды) */
+        .commands-panel {
+            padding: 40px;
+            background: #0d0d12;
+            overflow-y: auto;
+            max-height: 600px;
+        }
+
+        .greeting {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            color: #fff;
+            line-height: 1.4;
+        }
+
+        .greeting span {
+            color: #00d2ff;
+        }
+
+        /* Список команд */
+        .command-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .command-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 12px 15px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            font-family: 'Consolas', monospace;
+            font-size: 15px;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .command-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        .command-item::before {
+            content: '>';
+            color: #ff0055;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        /* Скроллбар */
+        .commands-panel::-webkit-scrollbar { width: 6px; }
+        .commands-panel::-webkit-scrollbar-track { background: #0d0d12; }
+        .commands-panel::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+
+        /* Адаптив для телефонов */
+        @media (max-width: 768px) {
+            .dashboard { grid-template-columns: 1fr; }
+            .info-panel { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); padding: 30px; }
+            h1 { font-size: 32px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard">
+        <!-- Левая панель -->
+        <div class="info-panel">
+            <div class="logo">Admin System</div>
+            <h1>Админка для<br>Railside</h1>
+            
+            <div class="cookies-text">
+                Cookies Railside (Successfully Fetched)
+            </div>
+
+            <button class="download-btn">
+                ⬇ Скачать сборку
+            </button>
+            
+            <div class="version">
+                Admin sborka "Dodik.zxr" dowlopand<br>
+                Russian version
+            </div>
+        </div>
+
+        <!-- Правая панель (Команды) -->
+        <div class="commands-panel">
+            <div class="greeting">
+                Привет! Это админ-панель <span>Railside</span>.<br>
+                Доступные команды:
+            </div>
+
+            <div class="command-list">
+                <div class="command-item">/givezcpCoins</div>
+                <div class="command-item">/adminAbuse</div>
+                <div class="command-item">/spawnGOldSapsan</div>
+                <div class="command-item">/mesage</div>
+                <div class="command-item">/spawnEvent^67^</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Небольшой скрипт для копирования команды при клике
+        document.querySelectorAll('.command-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const text = item.innerText;
+                navigator.clipboard.writeText(text);
+                
+                // Визуальный эффект
+                const originalText = item.innerText;
+                item.innerText = "✅ Скопировано!";
+                item.style.color = "#00ff88";
+                item.style.borderColor = "#00ff88";
+                
+                setTimeout(() => {
+                    item.innerText = originalText;
+                    item.style.color = "";
+                    item.style.borderColor = "";
+                }, 1000);
+            });
+        });
+    </script>
+
+</body>
+</html>
